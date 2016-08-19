@@ -48,7 +48,7 @@ Eclipse's linked resources called "virtual folders" are not supported.
 
 ## 3. Version
 
-		0.1
+		0.2
 
 
 
