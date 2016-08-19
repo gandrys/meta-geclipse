@@ -1,0 +1,89 @@
+#{DATE: 1984XXXX; AUTHOR: Andrys Jiri;  DESCRIPTION: Bla bla
+
+DESCRIPTION = "Sample Geclipse Build"
+LICENSE = "CLOSED"
+
+FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
+
+PR = "r1" 
+
+DEPENDS = "dbus glib-2.0 dbus-glib "
+RDEPENDS_${PN} = "dbus glib-2.0 dbus-glib "
+
+INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
+INHIBIT_PACKAGE_STRIP = "1"
+
+SRC_URI += "file://${PN}_${PV}.tar.gz"
+
+#{DATE: 1984XXXX; NAME: Andrys Jiri; DESCRIPTION: xxx patch
+SRC_URI += "file://xxx.patch"
+#}1984XXXX:
+
+
+#=====================================================================================
+
+#{DATE: XXXXXXXX; NAME: Andrys Jiri; #DESCRIPTION: Mandatory settings:
+
+S="${WORKDIR}/${PN}_${PV}"
+
+GECLIPSE_ECLIPSE_BIN="/home/trubka/eclipse/eclipse"
+GECLIPSE_PROJECTS_NAMES_DELIMSTR="prj1, prj2, prj3"
+GECLIPSE_PROJECTS_SKIP_IF_STR_IN_PRJPATH="android"
+GECLIPSE_PROJECTS_BUILD_CONF_STR="Release"
+
+#}XXXXXXXX:
+
+DEST_LIB_PATH="/usr/local/lib/"
+DEST_APP_PATH="/opt/"
+LIB_PATH="${WORKDIR}${DEST_LIB_PATH}"
+APP_PATH="${WORKDIR}${DEST_APP_PATH}"
+
+GECLIPSE_PROJECTS_ALL_FLAGS="SAME_LINKER_COMMAND_AS_COMPILER_COMMAND, \
+                             ADD_FPIC_TO_SHARED_LIBS, \
+                             ENABLE_PARALLEL_BUILD,\
+                             REMOVE_ALL_NON_WORKSPACE_RELATED_INCLUDE_PATHS_AND_LIBRARY_PATHS"
+
+#{DATE: XXXXXXXX; NAME: Andrys Jiri; DESCRIPTION: add dependencies[cflags[-I], ldflags[-L] ]:
+GECLIPSE_PROJECTS_ALL_FIND_INCLUDE_PATHS="dbus-1, glib-2.0, dbus-glib-1, libxml-2.0"
+GECLIPSE_PROJECTS_ALL_FIND_LIBRARY_PATHS="dbus-1, glib-2.0, dbus-glib-1, libxml-2.0"
+#}
+
+GECLIPSE_PROJECTS_ALL_BUILD_VARS="LIB_PATH=${LIB_PATH}, APP_PATH=${APP_PATH}"
+GECLIPSE_PROJECTS_ALL_INCLUDE_PATHS="${S}/prj1/include"
+GECLIPSE_PROJECTS_ALL_LIBRARY_PATHS="${LIB_PATH}"
+
+GECLIPSE_PROJECTS__PRJ1__LDFLAGS_LIBNAMES="CZECHIA1, VACLAV4"
+GECLIPSE_PROJECTS__PRJ2__LDFLAGS_LIBNAMES="CZECHIA1, VACLAV4"
+
+#{Post-build commands:
+LIB_POST_BUILD_STEP="cp -rf ${S}/src/${ProjName}/${ConfigName}/lib${ProjName}.so ${LIB_PATH}"
+GECLIPSE_PROJECTS__PRJ1__POST_BUILD_STEP="${LIB_POST_BUILD_STEP}"
+GECLIPSE_PROJECTS__PRJ2__POST_BUILD_STEP="${LIB_POST_BUILD_STEP}"
+
+GECLIPSE_PROJECTS__PRJ3__POST_BUILD_STEP="cp -rf ${S}/src/${ProjName}/${ConfigName}/${ProjName} ${APP_PATH}"
+#}
+
+inherit pkgconfig
+inherit geclipse
+
+do_prepare() {
+    mkdir -p "${LIB_PATH}"
+    mkdir -p "${APP_PATH}"
+}
+
+addtask do_prepare before do_configure
+
+
+do_install() {
+
+  mkdir -p "${D}/${DEST_LIB_PATH}"
+  mkdir -p "${D}/${DEST_APP_PATH}"
+
+  cp -af ${LIB_PATH}/*.so ${D}/${DEST_LIB_PATH}
+  cp -af ${APP_PATH}/* ${D}/${DEST_APP_PATH}
+}
+
+FILES_${PN} += "${DEST_APP_PATH}/*"
+FILES_${PN} += "${DEST_LIB_PATH}/*"
+
+#}1984XXXX:
