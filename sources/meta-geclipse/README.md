@@ -63,7 +63,7 @@ and yocto build system.
 ### 4.1 Yocto Settings
 
 1. To get started, clone the `meta-geclipse` repository :
-	>`git clone https://github.com/meta-geclipse.git`
+	>`git clone https://github.com/gandrys/meta-geclipse.git`
 
 
 2. After cloning the repository, 
@@ -71,7 +71,7 @@ copy `meta-geclipse` folder to source folder of yocto environment.
 
 
 3. Add bblayer to `conf/bblayers.conf`: 
-	>`BBLAYERS += " ${BSPDIR}/sources/meta-gnomon-eclipse "`
+	>`BBLAYERS += " ${BSPDIR}/sources/meta-geclipse "`
 
 >>At this point poky knows about `meta-geclipse` layer 
 and included ***geclipse.bbclass*** . Because of this
