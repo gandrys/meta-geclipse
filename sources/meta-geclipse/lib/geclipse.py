@@ -678,6 +678,7 @@ class eclipse_tasks():
             #self.__smess("ECLIPSE_IMPORT: {:4f}".format(time.time() - old_time), self.STATUS_LEVEL_INFO)
             self.__pmess("ECLIPSE_IMPORT: {:4f}".format(time.time() - old_time))
             if sp.poll() is not None:
+                #process finished, check retcode, clean process by sp.communicate
                 ret_stdout, ret_stderr=sp.communicate()
                 self.__pmess("ECLIPSE_IMPORT:retcode>{0}".format(str(sp.returncode)),lastmess=True)
                 return (sp.returncode, ret_stdout, ret_stderr)
@@ -689,9 +690,9 @@ class eclipse_tasks():
             ret_stdout, ret_stderr = sp.communicate()
             ##glogger.error("[eclipse_import]:"+"returncode:"+sp.returncode+"stdout: "+ret_stdout+" stderr:"+ret_stderr)
             #if sp.returncode == 13 >>  Application "org.eclipse.cdt.managedbuilder.core.headlessbuild" could not be found in the registry
-            self.__smess("[eclipse_import]:"+"returncode:"+sp.returncode+"stdout: "+ret_stdout+" stderr:"+ret_stderr, \
+            self.__smess("[Error: Timeout]:[ECLIPSE_IMPORT]:"+"returncode:"+str(sp.returncode), \
                          self.STATUS_LEVEL_ERROR)
-            return (sp.returncode+100, ret_stdout, ret_stderr)
+            return (sp.returncode, ret_stdout, ret_stderr)
 
 
 
@@ -744,13 +745,22 @@ class eclipse_tasks():
                         self.__pmess("ECLIPSE_BUILD[{0}]:\t\tretcode>{1}".format(prj.project_name, str(sp.returncode)),
                                      lastmess=True)
 
-                    if sp.returncode == 1:
+                    if sp.returncode == 0 or sp.returncode == 1 :
                         #ok
-                        #eclipse usually return 1 not 0 in case of build success and some warnings
+                        #eclipse usually return 1 or  0 in case of build success and some warnings
                         break
                     else:
                         #error
                         return sp.returncode
+
+            # timeout
+            if sp.returncode is None:
+                sp.kill()
+                sp.wait()
+                self.__smess("[Error: Timeout]:[ECLIPSE_BUILD]:" + "returncode:" + str(sp.returncode), \
+                             self.STATUS_LEVEL_ERROR)
+                return sp.returncode
+
 
         self.progresshandler('\x1b[80D\x1b[1A\x1b[K')
         return 1

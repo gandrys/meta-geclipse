@@ -535,7 +535,7 @@ python geclipse_do_compile() {
     bb.plain(DELIM1 + "{ --ECLIPSE_BUILD-------------- ")
     bb.note(DELIM1 + "} --ECLIPSE_BUILD-------------- ")
 
-    if returncode == 1:
+    if returncode == 0 or returncode == 1:
       bb.note(DELIM1 + "ECLIPSE_BUILD: return code: "+str(returncode))
       #bb.note(DELIM1 + "ECLIPSE_BUILD: stderr: \n"+str(ret_stderr))
       #bb.note(DELIM1 + "ECLIPSE_BUILD: stdout: \n"+str(ret_stdout))
