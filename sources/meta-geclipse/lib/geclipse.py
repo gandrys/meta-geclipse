@@ -521,7 +521,7 @@ class eclipse_tasks():
     """
 
     __base_params="-noSplash --launcher.suppressErrors "
-    __ec_hlb_cmd="-application org.eclipse.cdt.managedbuilder.core.headlessbuild "
+    __ec_hlb_cmd="-application org.eclipse.cdt.managedbuilder.core.headlessbuild -no-indexer"
 
     #-no-indexer is not compatible with kepler and older version of eclipse
     #__ec_hlb_cmd="-application org.eclipse.cdt.managedbuilder.core.headlessbuild -no-indexer"
@@ -696,7 +696,7 @@ class eclipse_tasks():
 
 
 
-    def build2(self, projects_build_conf, cleanbuild=False, timeout_sec=1200):
+    def build2(self, projects_build_conf, cleanbuild=True, timeout_sec=4000):
         """Projects build in the same order as we pass to eclipse_task's konstructor #list_eclipse_project"""
 
         cmd_build = self.eclipse_path + " "
@@ -711,7 +711,6 @@ class eclipse_tasks():
 
         for prj in self.list_eclipse_project:
             prj_bld=prj.project_name+"/"+projects_build_conf
-
             cmd_build_project=cmd_build+buildtype+'"'+prj_bld+'"'+" "
 
             cmd_glob = " "
@@ -736,16 +735,16 @@ class eclipse_tasks():
 
                 # glogger.info("building: {:4f}".format(time.time() - old_time))
                 self.__pmess("ECLIPSE_BUILD[{0}]: {1:4f}".format(prj.project_name, time.time() - old_time))
+                
                 if sp.poll() is not None:
                     #process finished, check retlevel
-
+                    
                     if self.list_eclipse_project[len(self.list_eclipse_project)-1].project_name != prj.project_name:
                         self.__pmess("ECLIPSE_BUILD[{0}]\t\t:retcode>{1}\n\n".format(prj.project_name, str(sp.returncode)),lastmess=True)
                     else:
-                        self.__pmess("ECLIPSE_BUILD[{0}]:\t\tretcode>{1}".format(prj.project_name, str(sp.returncode)),
-                                     lastmess=True)
+                        self.__pmess("ECLIPSE_BUILD[{0}]:\t\tretcode>{1}\n".format(prj.project_name, str(sp.returncode)),lastmess=True)
 
-                    if sp.returncode == 0 or sp.returncode == 1 :
+                    if sp.returncode == 0 :
                         #ok
                         #eclipse usually return 1 or  0 in case of build success and some warnings
                         break
@@ -762,8 +761,8 @@ class eclipse_tasks():
                 return sp.returncode
 
 
-        self.progresshandler('\x1b[80D\x1b[1A\x1b[K')
-        return 1
+        self.progresshandler('\x1b[1A\x1b[1A')
+        return 0
 
 
     def build_old(self, projects_build_conf, cleanbuild=True, timeout_sec=1200):

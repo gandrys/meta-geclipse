@@ -12,8 +12,7 @@
 #
 # Depends what FAQ(https://eclipse.org/legal/eplfaq.php) says,
 # using modules of eclipse,
-# linking and therefore interfacing with eclipse is not derivative
-# work ?
+# linking and therefore interfacing with eclipse is not derivative work
 #
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -1287,4 +1286,45 @@ class eclipse_language_file(object):
         f = open(lng_file_path, "wb")
         self.lng_file_dom.writexml(f)
         #print self.lng_file_dom.toxml()
+
+    def update_eclipse_file2(self, lng_file_path=None):
+        """In order to apply all changes made in new build configuration we have to call this method.
+
+           Second version of this method had been made, because of eclipse's CDT un-expected behavior,
+           in all tested versions: kepler, neon
+           Return value after build was incorrect(1) in case that paths and compilers in others build configurations(not selected one)
+           did not exists.Because of this we will remove all build configurations and use only one.
+
+        :param lng_file_path:  For debug purposes only
+        :return:
+        """
+        self._just_to_be_sure_make_backup()
+
+        if lng_file_path is None:
+            lng_file_path=self.lng_file
+
+        #remove white chars
+        SEARCH_PATH = "storageModule[@moduleId=org.eclipse.cdt.core.settings]"
+        sm = dom_find(self.lng_file_dom, SEARCH_PATH)
+        chlds = sm[0].childNodes
+        for chld in chlds:
+            chld.parentNode.removeChild(chld)
+
+        #remove cconfs
+        SEARCH_PATH = "storageModule/cconfiguration[@id]"
+        cconfs = dom_find(self.lng_file_dom, SEARCH_PATH)
+        for cconf in cconfs:
+            cconf.parentNode.removeChild(cconf)
+
+        SEARCH_PATH = "storageModule[@moduleId=org.eclipse.cdt.core.settings]"
+        sm = dom_find(self.lng_file_dom, SEARCH_PATH)
+
+        txt_node_bf = self.lng_file_dom.createTextNode("\n\t\t")
+        txt_node_af = self.lng_file_dom.createTextNode("\n\t")
+        sm[0].appendChild(txt_node_bf)
+        sm[0].appendChild(self.bc.bc_new_node_cconf_cpy)
+        sm[0].appendChild(txt_node_af)
+
+        f = open(lng_file_path, "wb")
+        self.lng_file_dom.writexml(f)
 

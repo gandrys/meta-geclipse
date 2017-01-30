@@ -190,7 +190,7 @@ def build_configuration_cdt(d, list_obj_project):
 
 
         #os.sys.exit(1)
-        ec_cdt.update_eclipse_file()
+        ec_cdt.update_eclipse_file2()
 
 
 #ROOTFS="STAGING_DIR_HOST"
@@ -466,7 +466,7 @@ python geclipse_do_configure() {
     bb.note(DELIM1 + "{ --ECLIPSE_IMPORT-------------- ")
     bb.plain("\n"+DELIM1 + "{ --ECLIPSE_IMPORT-------------- \n\n")
     returncode, ret_stdout, ret_stderr=et.import2ws()
-    bb.plain(DELIM1 + "{ --ECLIPSE_IMPORT-------------- ")
+    bb.plain(DELIM1 + "} --ECLIPSE_IMPORT-------------- ")
     bb.note(DELIM1 + "} --ECLIPSE_IMPORT-------------- ")
 
     if returncode == 0:
@@ -532,10 +532,10 @@ python geclipse_do_compile() {
 
     returncode=et.build2(get_new_build_configuration_name(d))
 
-    bb.plain(DELIM1 + "{ --ECLIPSE_BUILD-------------- ")
+    bb.plain(DELIM1 + "} --ECLIPSE_BUILD-------------- ")
     bb.note(DELIM1 + "} --ECLIPSE_BUILD-------------- ")
 
-    if returncode == 0 or returncode == 1:
+    if returncode == 0 :
       bb.note(DELIM1 + "ECLIPSE_BUILD: return code: "+str(returncode))
       #bb.note(DELIM1 + "ECLIPSE_BUILD: stderr: \n"+str(ret_stderr))
       #bb.note(DELIM1 + "ECLIPSE_BUILD: stdout: \n"+str(ret_stdout))

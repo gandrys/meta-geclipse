@@ -15,18 +15,22 @@ want to build our sw for different platform by yocto recipes.
 Some features are not supported, 
 plugin itself should be considered as beta version.
 
-Eclipse(>=kepler) IDE with CDT(C,C++ dev) have to be in system !
+Eclipse(>kepler) IDE with CDT(C,C++ dev) have to be in system !
+Kepler version has been tested too, due to lack of "-no-indexer" option, 
+and fastest build highest versions are supported. 
+Yocto class was also tested latest Eclipse(Luna).
 
-Plugin has been tested on fsl-bsp version of yocto.
+Plugin was tested on fsl-bsp version of yocto.
 
-Maintainer  	:  Jiri Andrys (andrys.jiri+project_yoctogeclipse@gmail.com)   
+Author          :  Jiri Andrys (andrys.jiri+project_yoctogeclipse@gmail.com)
+Maintainer  	:  Jiri Andrys 
 Contributors	:  Jiri Andrys
 
 
 ## 1. Motivation 
 for `meta-geclipse` is software which is using eclipse as development
 platform and is in a state of wild development phase and running on many diferent HW platforms.
-Modification of makefiles/eclipse took a lot of time.
+Modification of makefiles/eclipse configuration took a lot of time.
 
 *Note:*
 >* We can use "meta-toolchain" from poky and source "environment-setup-XXX.sh"
