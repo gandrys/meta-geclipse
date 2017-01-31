@@ -1,41 +1,51 @@
-# *meta-geclipse* plugin/bbclass/inherit for yocto
-==================================================
-  
+# eclipse bbclass/inherit for yocto
+
+Yocto bbclass for fast deployment of eclipse`s CDT based projects into yocto.
+
+Author          :  Jiri Andrys (andrys.jiri+project_yoctogeclipse@gmail.com)  
+Maintainer      :  Jiri Andrys  
+
 
 ## 0. Overview 
 
-The `meta-geclipse` allows konfiguration/build of eclipse-project 
+**meta-geclipse** allows konfiguration/build of eclipse-project 
 directly from yocto-recipes. 
 
-We suppose that we already have sw in eclipse with 
-availabe *Build Configuration*, for example for x86 platform and we
+We suppose that we already have software in eclipse with 
+availabe **Build Configuration**, for example for x86 platform and we
 want to build our sw for different platform by yocto recipes.
 
 
-Some features are not supported, 
-plugin itself should be considered as beta version.
+Some features are not supported by plugin. 
+Plugin itself should be considered as beta version.
 
-Eclipse(>kepler) IDE with CDT(C,C++ dev) have to be in system !
-Kepler version has been tested too, due to lack of "-no-indexer" option, 
-and fastest build highest versions are supported. 
-Yocto class was also tested latest Eclipse(Luna).
+Eclipse version>kepler IDE with CDT(C,C++ dev) have to be in system.  
+Plugin was tested in following environment:  
 
-Plugin was tested on fsl-bsp version of yocto.
 
-Author          :  Jiri Andrys (andrys.jiri+project_yoctogeclipse@gmail.com)
-Maintainer  	:  Jiri Andrys 
-Contributors	:  Jiri Andrys
+|Software    |Version                         |
+|------------|--------------------------------|
+|OS          | Ubuntu 16.04(x64); 14,04(x64)  |
+|Poky        | 1.4; 1.6                       |
+|BSP         | FSL-BSP                        |
+|Eclipse     | Mars, Neon                     |
+
+*Note: In general any eclipse version >Kepler can be used.
+Unfortunattely Kepler does not support "-no-indexer" option.
+Indexing process take a lot of time and we do need to search in source, 
+there is no meaning for this and therefore plugin is using "-no-indexer" option.*
+
 
 
 ## 1. Motivation 
-for `meta-geclipse` is software which is using eclipse as development
-platform and is in a state of wild development phase and running on many diferent HW platforms.
-Modification of makefiles/eclipse configuration took a lot of time.
+Usually manual modification of makefiles/eclipse configuration take a time in case of big project.
+In late stages of sw development and huge amount of customizations for 
+diferent HW platforms main developers in order to speed up process sometimes use Eclipse. Therefore we can directly use Eclipse project and build it directly in yocto with help of this plugin.
+
 
 *Note:*
 >* We can use "meta-toolchain" from poky and source "environment-setup-XXX.sh"
-and cross compile sw, but this method is more for early phase of development and could not 
-give us features and scaling same as recipes. 
+and cross compile sw, but this method is more for early phase of development and could not give us features and scaling same as recipes.  
 
 > * Eclipse it self is having plugin for yocto:
 ***The Yocto Project Application Development Toolkit (ADT)***
@@ -52,7 +62,7 @@ Eclipse's linked resources called "virtual folders" are not supported.
 
 ## 3. Version
 
-		0.2
+        0.2
 
 
 
@@ -67,7 +77,7 @@ and yocto build system.
 ### 4.1 Yocto Settings
 
 1. To get started, clone the `meta-geclipse` repository :
-	>`git clone https://github.com/gandrys/meta-geclipse.git`
+    >`git clone https://github.com/gandrys/meta-geclipse.git`
 
 
 2. After cloning the repository, 
@@ -75,15 +85,15 @@ copy `meta-geclipse` folder to source folder of yocto environment.
 
 
 3. Add bblayer to `conf/bblayers.conf`: 
-	>`BBLAYERS += " ${BSPDIR}/sources/meta-geclipse "`
+    >`BBLAYERS += " ${BSPDIR}/sources/meta-geclipse "`  
 
->>At this point poky knows about `meta-geclipse` layer 
-and included ***geclipse.bbclass*** . Because of this
-we can add ***`inherit geclipse`*** to our recipes.
+   At this point poky knows about `meta-geclipse` layer 
+   and included ***geclipse.bbclass*** . Because of this
+   we can add ***`inherit geclipse`*** to our recipes.
 
 
 
-	
+    
 ### 4.2 Yocto-Geclipse-Recipes:
 
 >* All variables related to geclipse plugin have **GECLIPSE** prefix
@@ -161,7 +171,7 @@ Because of that Geclipse recipes only needs paths:
 
 >*Example:*
  >>GECLIPSE_PROJECTS_ALL_FIND_INCLUDE_PATHS="dbus-1, glib-2.0, gthread-2.0,
-											gobject-2.0, libxml-2.0"
+                                            gobject-2.0, libxml-2.0"
 
 
 **`GECLIPSE_PROJECTS_ALL_INCLUDE_PATHS`**
@@ -177,7 +187,7 @@ Because of that Geclipse recipes only needs paths:
 
 >*Example:*
  >>GECLIPSE_PROJECTS_ALL_FIND_LIBRARY_PATHS="dbus-1, glib-2.0, gthread-2.0,
-											gobject-2.0, libxml-2.0"
+                                            gobject-2.0, libxml-2.0"
 
 
 **`GECLIPSE_PROJECTS_ALL_LIBRARY_PATHS`**
@@ -337,3 +347,5 @@ FILES_${PN} += "${DEST_LIB_PATH}/*"
 
 #}1984XXXX:
 ~~~
+
+
